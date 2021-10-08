@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  AMI:
+    Type: String
+    # Amazon AWS eu-west-3 20.04 20211001
+    # https://cloud-images.ubuntu.com/locator/
+    Default: ami-04c512eb02ad15697
+    Description: The Windows AMI to use.
+  KeyPair:
+    Type: String
+    Description: Key pair used to access the instance.
+  HostedZone:
+    Type: String
+    Description: Hosted zone to use to create DNS record
+Resources:
+
+  #
+  # EC2 instance
+  #
+  Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: !Ref AMI
+      InstanceType: t2.micro
+      KeyName: !Ref KeyPair
+      Tags:
+        - Key: Name
+          Value: MyInstance
+  
+  # 
+  # Route53 A record for our instance
+  #
+  DNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: !Ref HostedZone
+      # Produce string like "pulumi.devops.crafteo.io"
+      # by joining 'pulumi' and hostedZone param
+      #
+      # ...
+      #
+      # Urgh.
+      Name: !Join 
+      - '.'
+      - 
+        - 'pulumi'
+        - !Ref HostedZone
+
+      # Retrieve our instance Public IP
+      # to affect it as record value
+      ResourceRecords:
+      - !GetAtt Instance.PublicIp
+      TTL: 30
+      Type: A
