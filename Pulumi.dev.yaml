@@ -1,2 +1,4 @@
 config:
   aws:region: eu-central-1
+  pulumi-demo:hostedzone: devops.crafteo.io.
+  pulumi-demo:count: 3

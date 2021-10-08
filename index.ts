@@ -1,14 +1,17 @@
-import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 import { PulumiExample } from "./componentresource"
 
-new PulumiExample("ec2Instance1", {
-  fqdn: "pulumi1.devops.crafteo.io",
-})
+let config = new pulumi.Config();
 
-new PulumiExample("ec2Instance2", {
-  fqdn: "pulumi2.devops.crafteo.io",
-})
+const hostedZone = config.require("hostedzone")
+const count = config.requireObject<number>("count")
 
-new PulumiExample("ec2Instance3", {
-  fqdn: "pulumi3.devops.crafteo.io",
-})
+console.log(`Using hosted zone: ${hostedZone} with ${count} instances`)
+
+for (let i=1; i<=count; i++){
+  new PulumiExample(`ec2Instance${i}`, {
+    hostedZone: hostedZone,
+    fqdn: `pulumi${i}.${hostedZone}`,
+  })
+}
+
