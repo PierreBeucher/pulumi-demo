@@ -1,13 +1,29 @@
 # Pulumi demo
 
-Before:
+Demo comparing a Pulumi stack with CloudFormation equivalent
 
-- Use Crafteo AWS account
-- Use personnal Pulumi account
+Pulumi usage:
 
 ```
-pulumi new aws-typescript
+# pulumi new aws-typescript
+# ssh-keygen -f ./sshkey
 pulumi up -y 
+```
 
-ssh-keygen -f ./sshkey
+CloudFormation usage:
+
+```
+aws cloudformation create-stack \
+ --stack-name cloudformation-vs-pulumi \
+ --template-body file://cloudformation.yml \
+ --parameters='[
+   {
+    "ParameterKey": "HostedZone",
+    "ParameterValue": "devops.crafteo.io."
+  },
+  {
+    "ParameterKey": "KeyPair",
+    "ParameterValue": "pulumi-vs-cf"
+  }
+ ]'
 ```
