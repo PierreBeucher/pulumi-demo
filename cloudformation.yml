@@ -1,17 +1,21 @@
 AWSTemplateFormatVersion: 2010-09-09
 Parameters:
+  
   AMI:
     Type: String
     # Amazon AWS eu-west-3 20.04 20211001
     # https://cloud-images.ubuntu.com/locator/
     Default: ami-04c512eb02ad15697
     Description: The Windows AMI to use.
+
   KeyPair:
     Type: String
     Description: Key pair used to access the instance.
+
   HostedZone:
     Type: String
     Description: Hosted zone to use to create DNS record
+
 Resources:
 
   #
@@ -29,13 +33,16 @@ Resources:
   
   # 
   # Route53 A record for our instance
+  # Reference our EC2 instance public IP using !Ref
   #
   DNSRecord:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneName: !Ref HostedZone
-      # Produce string like "pulumi.devops.crafteo.io"
-      # by joining 'pulumi' and hostedZone param
+      #
+      # Use a mix of !Join and !Ref "function"
+      # to produce a string like "pulumi.devops.crafteo.io"
+      # by joining 'cloudformation' and HostedZone param
       #
       # ...
       #
@@ -43,7 +50,7 @@ Resources:
       Name: !Join 
       - '.'
       - 
-        - 'pulumi'
+        - 'cloudformation'
         - !Ref HostedZone
 
       # Retrieve our instance Public IP
