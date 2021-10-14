@@ -19,9 +19,19 @@ graph LR
 Pulumi usage:
 
 ```
-# pulumi new aws-typescript
-# ssh-keygen -f ./sshkey
+# Create new project
+pulumi new aws-typescript --force
+
+# Create ssh key
+ssh-keygen -f ./sshkey
+
+# Up stack
 pulumi up -y 
+
+# Access Pulumi website to see stack and backend
+# https://app.pulumi.com/
+
+
 ```
 
 CloudFormation usage:
