@@ -1,3 +1,0 @@
-name: pulumi-demo
-runtime: nodejs
-description: Pulumi demo with simple AWS deployment
